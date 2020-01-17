@@ -1,0 +1,265 @@
+import java.util.Scanner;
+import java.util.ArrayList;
+
+
+public class ProgramSkeleton {
+
+    private Scanner input = new Scanner(System.in);
+
+    private ArrayList<Dog> dogs = new ArrayList<Dog>();
+    private ArrayList<User> users = new ArrayList<User>();
+
+    public static void main(String[] args) {
+        ProgramSkeleton p = new ProgramSkeleton();
+        p.run();
+    }
+
+
+    private void run() {
+        System.out.println("Hej och välkommen till hundprogrammet!");
+
+
+        String commando;
+
+        do {
+            System.out.print("Kommando?> ");
+            commando = input.nextLine().toLowerCase();
+            switch (commando) {
+                case "register new dog":
+                    System.out.println("Du gav kommandot: " + commando);
+                    registerDog();
+                    break;
+                case "increase age":
+                    System.out.println("Du gav kommandot: " + commando);
+                    increaseAge();
+                    break;
+                case "list dogs":
+                    System.out.println("Du gav kommandot: " + commando);
+                    listDogs();
+                    break;
+                case "remove dog":
+                    System.out.println("Du gav kommandot: " + commando);
+                    removeDog();
+                    break;
+                case "register new user":
+                    registerUser();
+                    break;
+                case "list users":
+                    listUsers();
+                    break;
+                case "give dog":
+                    giveDog();
+                    break;
+                case "remove user":
+                    removeUser();
+                    break;
+                case "exit":
+                    System.out.println("Hejdå!");
+                    break;
+                default:
+                    System.out.println("Fel, inte ett kommando");
+
+
+            }
+
+
+        } while (!commando.equals("exit"));
+
+    }
+
+    private void registerDog() {
+        System.out.print("Name?> ");
+        String name = input.nextLine().toLowerCase().trim();
+        while (name.equalsIgnoreCase("") || name.isBlank()) {
+            System.out.println("Error: the name can't be empty");
+            System.out.println("Name?> ");
+            name = input.nextLine();
+        }
+        System.out.print("Breed?> ");
+        String breed = input.nextLine().toLowerCase().trim();
+        System.out.print("Age?> ");
+        int age = input.nextInt();
+        System.out.print("Weight?> ");
+        int weight = input.nextInt();
+        input.nextLine();
+        Dog newDog = new Dog(name, breed, age, weight);
+        dogs.add(newDog);
+        System.out.println(name + " added to the register");
+
+
+    }
+
+    private void listDogs() {
+        if (!dogs.isEmpty()) {
+
+
+            System.out.print("Smallest tail lenght to display?>");
+
+            ArrayList<Dog> dogsWithLongerTail = new ArrayList<>();
+            double smallestTail = input.nextDouble();
+            input.nextLine();
+
+            for (Dog dog : dogs) {  //itererar igenom listan
+                if (dog.getTailLength() >= smallestTail) {
+                    dogsWithLongerTail.add(dog);
+                    new DogSorter().sort(dogsWithLongerTail);
+                }
+            }
+            System.out.println("The following dogs has such a large tail:");
+            for (Dog element : dogsWithLongerTail) {
+                System.out.println(element);
+
+            }
+
+        } else {
+            System.out.println("Error: no dogs in register");
+        }
+    }
+
+    private void removeDog() {
+        System.out.print("Enter the name of the dog?> ");
+        String dogRemoval = input.nextLine().toLowerCase().trim();
+        Dog dogToFind = findDog(dogRemoval);
+        if (dogToFind != null) {
+            dogs.remove(dogToFind);
+            if (dogHasOwner(dogToFind)) {
+                User user = dogToFind.getUser();
+                user.removeDogFromOwner(dogToFind);
+            }
+            System.out.println(dogRemoval + " is removed from the register");
+        } else if (dogToFind == null) {
+            System.out.println("Error: no such dog");
+
+
+        }
+
+
+    }
+
+
+    private void increaseAge() {
+        System.out.print("Enter the name of the dog?> ");
+        String ageIncreaseDog = input.nextLine().toLowerCase().trim();
+        Dog dogToFind = findDog(ageIncreaseDog);
+        if (dogToFind != null) {
+            dogToFind.increaseAge();
+            System.out.println(dogToFind + " is now one year older");
+        } else if (dogToFind == null) {
+            System.out.println("Error: no such dog");
+        }
+    }
+
+
+    private Dog findDog(String dogInput) {
+        for (Dog dog : dogs) {
+            if (dog.getName().equalsIgnoreCase(dogInput)) {
+                return dog;
+            }
+
+
+        }
+        return null;
+    }
+
+
+    private void registerUser() {
+        System.out.print("Name?>");
+        String name = input.nextLine().toLowerCase().trim();
+        while (name.equalsIgnoreCase("") || name.isBlank()) {
+            System.out.println("Error: the name can't be empty");
+            System.out.println("Name?> ");
+            name = input.nextLine();
+        }
+        User newUser = new User(name);
+        users.add(newUser);
+        System.out.println(name + " added to the register");
+    }
+
+    private void listUsers() {
+        if (!users.isEmpty()) {
+
+            for (User element : users) {
+                System.out.println(element);
+            }
+
+        } else {
+            System.out.println("Error: no users in register");
+        }
+
+    }
+
+    private void giveDog() {
+        System.out.print("Enter the name of the dog?> ");
+        String dog = input.nextLine().toLowerCase().trim();
+        Dog dogToFind = findDog(dog);
+        if (dogToFind == null) {
+            System.out.println("Error: no such dog");
+        } else if (dogToFind != null) {
+            if (dogToFind.getUser() != null) {
+                System.out.println("Error: the dog already has an owner");
+            } else {
+                System.out.print("Enter the name of the user?> ");
+                String user = input.nextLine().toLowerCase().trim();
+                User userToFind = findUser(user);
+                if (userToFind == null) {
+                    System.out.println("Error: no such user");
+                } else if (userToFind != null) {
+                    giveDogToUser(dogToFind, userToFind);
+                    System.out.println(userToFind + " now owns " + dogToFind);
+
+                }
+            }
+        }
+
+
+
+    }
+
+    private void removeUser() {
+        System.out.print("Enter the name of the user?> ");
+        String userRemoval = input.nextLine().toLowerCase().trim();
+        User userToFind = findUser(userRemoval);
+        if (userToFind == null) {
+            System.out.println("Error: no such user");
+        } else if (userToFind != null) {
+            users.remove(userToFind);
+            removeDogsAssignedToUser(userToFind);
+            userToFind.removeUserFromDogs();
+            System.out.println(userToFind + " is removed from the register");
+
+        }
+    }
+
+    private User findUser(String userInput) {
+        for (User user : users) {
+            if (user.getName(user).equalsIgnoreCase(userInput)) {
+                return user;
+            }
+
+
+        }
+        return null;
+    }
+
+    private void giveDogToUser(Dog dog, User user) {
+        dog.setUser(user);
+        user.addDog(dog);
+    }
+
+    private void removeDogsAssignedToUser(User user) {
+        Dog[] usersDogs = new Dog[user.getNextDog()];
+        for (int i = 0; i < usersDogs.length; i++) {
+            usersDogs[i] = user.getDog(i);
+        }
+        for (int i = 0; i < usersDogs.length; i++) {
+            dogs.remove(usersDogs[i]);
+        }
+    }
+
+
+
+    private boolean dogHasOwner(Dog dog){
+        return dog.getUser() != null;
+    }
+
+}
