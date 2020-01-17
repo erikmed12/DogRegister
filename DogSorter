@@ -1,0 +1,37 @@
+import java.util.ArrayList;
+
+
+public class DogSorter {
+
+
+    public void sort(ArrayList<Dog> dogs) {
+
+
+        for (int i = 0; i < dogs.size(); i++) {   
+
+
+            Dog min = dogs.get(i);              
+            int dogMinIndex = i;                   
+            Dog temp;
+
+            for (int j = i + 1; j < dogs.size(); j++) {                             
+                if (dogs.get(j).getTailLength() < min.getTailLength()) {             
+                    min = dogs.get(j);                                                 
+                    dogMinIndex = j;
+                    
+                } else if (dogs.get(j).getTailLength() == min.getTailLength()) {
+                    if (dogs.get(i).getName().compareTo(dogs.get(j).getName()) > 0) {
+                        min = dogs.get(j);                                                 
+                        dogMinIndex = j;
+
+                    }
+                }
+                if (i != dogMinIndex) {                         
+                    temp = dogs.get(i);
+                    dogs.set(i, dogs.get(dogMinIndex));
+                    dogs.set(dogMinIndex, temp);
+
+                }
+            }
+        }
+    }
