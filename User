@@ -1,0 +1,83 @@
+import java.util.Arrays;
+
+public class User {
+
+    private String name;
+    private Dog[] owners = new Dog[0];
+    private int nextDog;
+
+
+    public User(String name){
+        this.name = name;
+    }
+
+    public String getName(User user){
+        return name;
+    }
+
+
+    public Dog getDog(int i) {
+        return null;
+    }
+
+
+    public void addDog(Dog dog) {
+        if (nextDog == owners.length) {
+            arrayIncreaseLenght();
+            owners[nextDog++] = dog;
+        }else {
+            owners[nextDog++] = dog;
+        }
+
+    }
+
+    public void removeDogFromOwner (Dog dog){
+        Dog[] removeDogFromOwner = new Dog[owners.length - 1];
+        int temp = 0;
+        for (int i = 0 ; i < owners.length; i++) {
+            if (owners[i] == dog){
+                Dog dogToRemove = owners[owners.length - 1];
+                owners[owners.length -1] = dog;
+                owners[i] = dogToRemove;
+                temp = i;
+            }
+        }
+        for (int i = temp; i < owners.length -1;i++){
+            removeDogFromOwner[i] = owners[i];
+        }
+        owners = removeDogFromOwner;
+    }
+
+
+    private void arrayIncreaseLenght() {
+        Dog[] newOwnerToDog = new Dog[owners.length + 1];
+        for (int i = 0; i < owners.length; i++) {
+            newOwnerToDog[i] = owners[i];
+
+        }
+        owners = newOwnerToDog;
+    }
+
+    public int getNextDog() {
+        return nextDog;
+    }
+
+
+    public String toString() {
+        String[] temp = new String [nextDog];
+        for(int i = 0; i < nextDog; i++){
+            System.out.println("i is:  + owners[i].getName()" + "is " + owners[i].getName());
+            temp[i] = owners[i].getName();
+        }
+        return name + Arrays.toString(temp);
+    }
+
+    public void removeUserFromDogs (){
+        for (Dog d: owners){
+            d.setUser(null);
+        }
+    }
+
+
+
+}
