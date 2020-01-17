@@ -1,0 +1,75 @@
+public class Dog {
+
+    private String name;
+    private String breed;
+    private int age;
+    private int weight;
+    private User user;
+
+
+
+    private final double taxTail = 3.7;
+    private final double divisionNum = 10.0;
+
+    public Dog(String name, String breed, int age, int weight) {
+        this.name = name;
+        this.breed = breed;
+        this.age = age;
+        this.weight = weight;
+
+    }
+
+
+    public User getUser(){
+        return user;
+    }
+
+
+    public String getName() {
+        return name;
+    }
+
+    public String getBreed() {
+        return breed;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public int getWeight() {
+        return weight;
+    }
+
+    public double getTailLength() {
+        if (breed.equalsIgnoreCase( "tax" )|| breed.equalsIgnoreCase("Dachshund")) {
+            return this.taxTail;
+        } else {
+            return age * weight / this.divisionNum;
+        }
+
+    }
+
+
+    public void increaseAge () {
+        age ++ ;
+    }
+
+
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+
+    @Override
+    public String toString() {
+        if(user==null){
+            return name+" ("+breed+", "+age+" years, "+weight+" kilo, "+getTailLength()+" cm tail)";
+        }else {
+            return name + " (" + breed + ", " + age + " years, " + weight + " kilo, " + getTailLength() + " cm tail, owned by "+ user.getName(user)+")";
+        }
+    }
+}
+
+
