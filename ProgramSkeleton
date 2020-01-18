@@ -179,7 +179,7 @@ public class ProgramSkeleton {
         if (!users.isEmpty()) {
 
             for (User element : users) {
-                System.out.println(element);
+                System.out.println(element.getNameSecond());
             }
 
         } else {
